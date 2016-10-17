@@ -2,7 +2,7 @@
 
 Jetty Spring boot type app for Jetty Load Testing
 
-`mvn clean package`
+Build: `mvn clean package`
 
 Start: `java -jar target/app-0.0.1-SNAPSHOT.jar --port=9090`
 
