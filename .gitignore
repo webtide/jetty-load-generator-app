@@ -5,3 +5,5 @@ target/
 
 jetty.local.port
 
+dependency-reduced-pom.xml
+
