@@ -17,6 +17,16 @@ public class HelloWorldController
 
     private static final Logger LOGGER = LoggerFactory.getLogger( HelloWorldController.class );
 
+
+    @GetMapping( "/stop" )
+    @ResponseBody
+    public String stopJvm(  )
+    {
+        LOGGER.info( "stopping jvm" );
+        System.exit( 0 );
+        return "Bye Bye";
+    }
+
     @GetMapping( "/helloworld" )
     @ResponseBody
     public String helloWorld()
