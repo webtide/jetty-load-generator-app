@@ -2,21 +2,19 @@ package com.webtide.jetty.load.generator;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
-import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.StatisticsServlet;
+import org.eclipse.jetty.util.resource.Resource;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.URI;
+import java.net.URL;
 
 /**
  *
@@ -40,44 +38,45 @@ public class Application
 
         StatisticsHandler statisticsHandler = new StatisticsHandler();
 
-        ServletContextHandler statsContext = new ServletContextHandler( statisticsHandler, "/" );
+        ServletContextHandler statsContext = new ServletContextHandler();
+
+        statsContext.setContextPath( "/" );
+
+        statsContext.setBaseResource( Resource.newResource( getRootURI() ) );
 
         statsContext.addServlet( new ServletHolder( new StatisticsServlet() ), "/stats" );
 
-        Path staticTmp = Files.createTempDirectory( "static" );
-        extractResourceToTmp( staticTmp );
+        statsContext.addServlet( DefaultServlet.class, "/" );
 
-        System.out.println( "static resources extracted to " + staticTmp.toString() );
-
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase( staticTmp.toString() );
-
-        ContextHandler staticHandler = new ContextHandler();
-        staticHandler.setContextPath( "/" );
-        staticHandler.insertHandler( resourceHandler );
+        statisticsHandler.setHandler( statsContext );
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers( new Handler[]{ statsContext, staticHandler } );
+        contexts.setHandlers( new Handler[]{ statisticsHandler, new DefaultHandler() } );
 
         server.setHandler( contexts );
+
+        server.setDumpAfterStart( true );
 
         server.start();
 
         server.join();
     }
 
-    private static void extractResourceToTmp( Path staticPath )
+    private static URI getRootURI()
         throws Exception
     {
 
-        try (InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-            "static/index.html" ))
+        URL webRootLocation = Application.class.getResource("/static/index.html");
+        if (webRootLocation == null)
         {
-            FileUtils.copyInputStreamToFile( inputStream,
-                                             Paths.get( staticPath.toString(), "static/index.html" ).toFile() );
+            throw new IllegalStateException("Unable to determine webroot URL location");
         }
 
+        URI webRootUri = URI.create(webRootLocation.toURI().toASCIIString().replaceFirst("/index.html$","/"));
 
+        System.out.println( "webRootUri:" + webRootUri );
+
+        return webRootUri;
     }
 
 
