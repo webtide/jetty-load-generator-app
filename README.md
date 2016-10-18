@@ -1,6 +1,6 @@
 # jetty-load-generator-app
 
-Jetty Spring boot type app for Jetty Load Testing
+Embeded app for Jetty Load Testing
 
 Build: `mvn clean package -DskipTests -Djetty.version=9.3.13.M0`
 
