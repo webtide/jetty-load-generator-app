@@ -8,6 +8,6 @@ return new ResourceProfile(new Resource( "index.html",
                                                        new Resource( "/js/bootstrap.js" )
                                          ),
                                          new Resource( "/helloworld" ),
-                                         new Resource( "/upload" ).size(4096),
+                                         new Resource( "/upload" ).size(8192),
                                          )
 );
