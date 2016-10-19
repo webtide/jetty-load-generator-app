@@ -2,6 +2,7 @@ package com.webtide.jetty.load.generator;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.webtide.jetty.load.generator.web.UploadServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -45,6 +46,8 @@ public class Application
         statsContext.setBaseResource( Resource.newResource( getRootURI() ) );
 
         statsContext.addServlet( new ServletHolder( new StatisticsServlet() ), "/stats" );
+
+        statsContext.addServlet( UploadServlet.class, "/upload" );
 
         statsContext.addServlet( DefaultServlet.class, "/" );
 
