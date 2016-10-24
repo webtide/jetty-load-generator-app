@@ -53,9 +53,10 @@ public class Application
 
         new JCommander( application, args );
 
-        server = new Server( application.port );
+        server = new Server();
 
-        server.addConnector( newServerConnector( server, application.transport ) );
+        server.addConnector( newServerConnector( server, application.transport, application.port ) );
+
 
         StatisticsHandler statisticsHandler = new StatisticsHandler();
 
@@ -92,9 +93,11 @@ public class Application
         return server;
     }
 
-    protected static ServerConnector newServerConnector( Server server, String transport )
+    protected static ServerConnector newServerConnector( Server server, String transport, int port )
     {
-        return new ServerConnector( server, provideServerConnectionFactory( transport ) );
+        ServerConnector serverConnector = new ServerConnector( server, provideServerConnectionFactory( transport ) );
+        serverConnector.setPort( port );
+        return serverConnector;
     }
 
     protected static ConnectionFactory[] provideServerConnectionFactory( String transport )

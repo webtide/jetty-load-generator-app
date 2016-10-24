@@ -26,19 +26,7 @@ public class StopServlet
     {
 
         LOGGER.info( "stop application" );
-
-        Server server = Application.getServer();
-        if ( server != null && server.isRunning() )
-        {
-            try
-            {
-                server.stop();
-            }
-            catch ( Exception e )
-            {
-                LOGGER.info( "skip cannot stop server", e );
-            }
-        }
+        
         System.exit( 0 );
     }
 }
