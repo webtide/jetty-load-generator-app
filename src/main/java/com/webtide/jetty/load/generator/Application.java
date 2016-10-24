@@ -2,9 +2,20 @@ package com.webtide.jetty.load.generator;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.webtide.jetty.load.generator.web.StopServlet;
 import com.webtide.jetty.load.generator.web.UploadServlet;
+import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.fcgi.server.ServerFCGIConnectionFactory;
+import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
+import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
+import org.eclipse.jetty.server.ConnectionFactory;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.HttpConfiguration;
+import org.eclipse.jetty.server.HttpConnectionFactory;
+import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.DefaultHandler;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
@@ -16,6 +27,8 @@ import org.eclipse.jetty.util.resource.Resource;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,6 +39,11 @@ public class Application
     @Parameter( names = { "--port", "-p" }, description = "Target port" )
     private int port = 8080;
 
+    @Parameter( names = { "--transport", "-t" }, description = "Type of transport: http, https, h2, h2c, fcgi" )
+    private String transport = "http";
+
+
+    private static Server server;
 
     public static void main( String[] args )
         throws Exception
@@ -35,7 +53,9 @@ public class Application
 
         new JCommander( application, args );
 
-        Server server = new Server( application.port );
+        server = new Server( application.port );
+
+        server.addConnector( newServerConnector( server, application.transport ) );
 
         StatisticsHandler statisticsHandler = new StatisticsHandler();
 
@@ -48,6 +68,8 @@ public class Application
         statsContext.addServlet( new ServletHolder( new StatisticsServlet() ), "/stats" );
 
         statsContext.addServlet( UploadServlet.class, "/upload" );
+
+        statsContext.addServlet( StopServlet.class, "/stop" );
 
         statsContext.addServlet( DefaultServlet.class, "/" );
 
@@ -65,17 +87,79 @@ public class Application
         server.join();
     }
 
+    public static Server getServer()
+    {
+        return server;
+    }
+
+    protected static ServerConnector newServerConnector( Server server, String transport )
+    {
+        return new ServerConnector( server, provideServerConnectionFactory( transport ) );
+    }
+
+    protected static ConnectionFactory[] provideServerConnectionFactory( String transport )
+    {
+
+        List<ConnectionFactory> result = new ArrayList<>();
+        switch ( transport )
+        {
+            case "http":
+            {
+                result.add( new HttpConnectionFactory( new HttpConfiguration() ) );
+                break;
+            }
+            case "https":
+            {
+                HttpConfiguration configuration = new HttpConfiguration();
+                configuration.addCustomizer( new SecureRequestCustomizer() );
+                HttpConnectionFactory http = new HttpConnectionFactory( configuration );
+                SslConnectionFactory ssl = new SslConnectionFactory();
+                result.add( ssl );
+                result.add( http );
+                break;
+            }
+            case "h2c":
+            {
+                result.add( new HTTP2CServerConnectionFactory( new HttpConfiguration() ) );
+                break;
+            }
+            case "h2":
+            {
+                HttpConfiguration configuration = new HttpConfiguration();
+                configuration.addCustomizer( new SecureRequestCustomizer() );
+                HTTP2ServerConnectionFactory h2 = new HTTP2ServerConnectionFactory( configuration );
+                ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory( "h2" );
+                SslConnectionFactory ssl = new SslConnectionFactory();// sslContextFactory, alpn.getProtocol() );
+                result.add( ssl );
+                result.add( alpn );
+                result.add( h2 );
+                break;
+            }
+            case "fcgi":
+            {
+                result.add( new ServerFCGIConnectionFactory( new HttpConfiguration() ) );
+                break;
+            }
+            default:
+            {
+                throw new IllegalArgumentException();
+            }
+        }
+        return result.toArray( new ConnectionFactory[result.size()] );
+    }
+
+
     private static URI getRootURI()
         throws Exception
     {
 
-        URL webRootLocation = Application.class.getResource("/static/index.html");
-        if (webRootLocation == null)
+        URL webRootLocation = Application.class.getResource( "/static/index.html" );
+        if ( webRootLocation == null )
         {
-            throw new IllegalStateException("Unable to determine webroot URL location");
+            throw new IllegalStateException( "Unable to determine webroot URL location" );
         }
 
-        URI webRootUri = URI.create(webRootLocation.toURI().toASCIIString().replaceFirst("/index.html$","/"));
+        URI webRootUri = URI.create( webRootLocation.toURI().toASCIIString().replaceFirst( "/index.html$", "/" ) );
 
         System.out.println( "webRootUri:" + webRootUri );
 
