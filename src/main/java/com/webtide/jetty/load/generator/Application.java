@@ -24,6 +24,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.StatisticsServlet;
 import org.eclipse.jetty.util.resource.Resource;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 
 import java.net.URI;
 import java.net.URL;
@@ -53,7 +54,10 @@ public class Application
 
         new JCommander( application, args );
 
-        server = new Server();
+        QueuedThreadPool serverThreads = new QueuedThreadPool();
+        serverThreads.setName( "server" );
+
+        server = new Server( serverThreads );
 
         server.addConnector( newServerConnector( server, application.transport, application.port ) );
 
