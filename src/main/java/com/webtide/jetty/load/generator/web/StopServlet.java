@@ -1,7 +1,5 @@
 package com.webtide.jetty.load.generator.web;
 
-import com.webtide.jetty.load.generator.Application;
-import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
@@ -26,7 +24,7 @@ public class StopServlet
     {
 
         LOGGER.info( "stop application" );
-        
+
         System.exit( 0 );
     }
 }

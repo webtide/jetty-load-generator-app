@@ -57,24 +57,23 @@ public class Application
 
         server.addConnector( newServerConnector( server, application.transport, application.port ) );
 
-
         StatisticsHandler statisticsHandler = new StatisticsHandler();
 
-        ServletContextHandler statsContext = new ServletContextHandler();
+        ServletContextHandler servletContextHandler = new ServletContextHandler();
 
-        statsContext.setContextPath( "/" );
+        servletContextHandler.setContextPath( "/" );
 
-        statsContext.setBaseResource( Resource.newResource( getRootURI() ) );
+        servletContextHandler.setBaseResource( Resource.newResource( getRootURI() ) );
 
-        statsContext.addServlet( new ServletHolder( new StatisticsServlet() ), "/stats" );
+        servletContextHandler.addServlet( new ServletHolder( new StatisticsServlet() ), "/stats" );
 
-        statsContext.addServlet( UploadServlet.class, "/upload" );
+        servletContextHandler.addServlet( UploadServlet.class, "/upload" );
 
-        statsContext.addServlet( StopServlet.class, "/stop" );
+        servletContextHandler.addServlet( StopServlet.class, "/stop" );
 
-        statsContext.addServlet( DefaultServlet.class, "/" );
+        servletContextHandler.addServlet( DefaultServlet.class, "/" );
 
-        statisticsHandler.setHandler( statsContext );
+        statisticsHandler.setHandler( servletContextHandler );
 
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers( new Handler[]{ statisticsHandler, new DefaultHandler() } );
