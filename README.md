@@ -13,6 +13,13 @@ When using random port 0, the local port is write in a file called jetty.local.p
 File upload: `curl -X PUT -d @pom.xml http://localhost:9090/upload`
 
 
+## Docker
+
+Build the docker image using `mvn clean install -P docker`
+
+Run the image using `docker run -it -p 8080:8080  webtide/jetty-load-app:0.0.1-SNAPSHOT`
+
+
 
 
 

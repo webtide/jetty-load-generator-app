@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.webtide.jetty.load.generator</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>jetty-load-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>app</name>
+	<name>Jetty :: Load App</name>
 	<description>Jetty Load Test project with embeded Jetty</description>
 
 	<properties>
@@ -146,8 +146,8 @@
             <artifactId>docker-maven-plugin</artifactId>
             <version>0.4.9</version>
             <configuration>
-              <imageName>webtide/${project.name}:${project.version}</imageName>
-              <baseImage>mykro/java8-jre:latest</baseImage>
+              <imageName>webtide/${project.artifactId}:${project.version}</imageName>
+              <baseImage>openjdk:8u102</baseImage>
               <cmd>java -jar /${project.build.finalName}.jar</cmd>
               <resources>
                 <resource>
