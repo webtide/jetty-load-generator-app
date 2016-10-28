@@ -1,14 +1,15 @@
 package com.webtide.jetty.load.generator.web;
 
-import org.eclipse.jetty.util.IO;
-import org.eclipse.jetty.util.log.Log;
-import org.eclipse.jetty.util.log.Logger;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -17,10 +18,11 @@ import java.nio.file.Path;
 /**
  *
  */
+@WebServlet("/upload")
 public class UploadServlet extends HttpServlet
 {
 
-    private static final Logger LOGGER = Log.getLogger( UploadServlet.class );
+    private static final Logger LOGGER = LoggerFactory.getLogger( UploadServlet.class );
 
     @Override
     protected void doGet( HttpServletRequest req, HttpServletResponse resp )
@@ -38,7 +40,7 @@ public class UploadServlet extends HttpServlet
         Path tmp = Files.createTempFile( "loadgenerator", ".jetty");
         try(OutputStream outputStream = Files.newOutputStream( tmp ))
         {
-            IO.copy( req.getInputStream(), outputStream );
+            IOUtils.copy( req.getInputStream(), outputStream );
         }
 
         System.out.println( "file size:" + tmp.toFile().length() );

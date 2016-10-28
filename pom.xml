@@ -6,7 +6,7 @@
 	<groupId>com.webtide.jetty.load.generator</groupId>
 	<artifactId>jetty-load-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>Jetty :: Load App</name>
 	<description>Jetty Load Test project with embeded Jetty</description>
@@ -17,54 +17,79 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<alpn.version>8.1.9.v20160720</alpn.version>
+		<maven-war-plugin-version>3.0.0</maven-war-plugin-version>
+		<gcloud-maven-plugin-version>2.0.9.130.v20161013</gcloud-maven-plugin-version>
+		<jetty-maven-plugin-version>9.3.7.v20160115</jetty-maven-plugin-version>
 	</properties>
 
 	<dependencies>
 
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-annotations</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.http2</groupId>
 			<artifactId>http2-server</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-alpn-server</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.eclipse.jetty.fcgi</groupId>
 			<artifactId>fcgi-server</artifactId>
 			<version>${jetty.version}</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 			<version>1.48</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<dependency>
@@ -77,6 +102,29 @@
 
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.google.appengine</groupId>
+					<artifactId>gcloud-maven-plugin</artifactId>
+					<version>${gcloud-maven-plugin-version}</version>
+					<configuration>
+						<gcloud_app_prefix>beta</gcloud_app_prefix>
+						<gcloud_directory>${gcloud.sdk.path}</gcloud_directory>
+						<gcloud_project>jetty-9</gcloud_project>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.google.cloud.tools</groupId>
+					<artifactId>appengine-maven-plugin</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<appEngineDirectory>${gcloud.sdk.path}</appEngineDirectory>
+						<dockerfile>src/main/appengine/Dockerfile</dockerfile>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -87,6 +135,7 @@
 					<source>1.8</source>
 				</configuration>
 			</plugin>
+			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
@@ -116,6 +165,20 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>${maven-war-plugin-version}</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>${jetty-maven-plugin-version}</version>
 			</plugin>
 		</plugins>
 	</build>

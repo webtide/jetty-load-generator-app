@@ -1,9 +1,5 @@
 package com.webtide.jetty.load.generator.web;
 
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,23 +8,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * Created by olamy on 28/10/16.
  */
-@WebServlet("/stop")
-public class StopServlet
-    extends HttpServlet
+@WebServlet("/hello")
+public class HelloServlet extends HttpServlet
 {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger( StopServlet.class );
-
 
     @Override
     protected void doGet( HttpServletRequest req, HttpServletResponse resp )
         throws ServletException, IOException
     {
+        String who = req.getParameter( "name" );
 
-        LOGGER.info( "stop application but only in embedded mode" );
-
-        //System.exit( 0 );
+        resp.getWriter().write( "hello " + (who == null ? "unknown" : who) );
     }
 }
