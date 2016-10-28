@@ -1,6 +1,10 @@
 runtime: custom
 vm: true
-
+service: load-generator
+resources:
+  cpu: 4
+  memory_gb: 4
+  disk_size_gb: 10
 handlers:
 - url: /.*
   script: this field is required, but ignored

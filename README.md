@@ -1,6 +1,8 @@
+
+
 # jetty-load-generator-app
 
-Embeded app for Jetty Load Testing
+Embeded app for Jetty Load Testing in branch embedded-app
 
 Build: `mvn clean package -DskipTests -Djetty.version=9.3.13.M0`
 

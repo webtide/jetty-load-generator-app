@@ -111,7 +111,7 @@
 					<configuration>
 						<gcloud_app_prefix>beta</gcloud_app_prefix>
 						<gcloud_directory>${gcloud.sdk.path}</gcloud_directory>
-						<gcloud_project>jetty-9</gcloud_project>
+						<gcloud_project>jetty9-work</gcloud_project>
 					</configuration>
 				</plugin>
 				<plugin>
