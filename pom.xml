@@ -102,6 +102,19 @@
 
 
 	<build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>src/main/appengine</directory>
+        <includes>
+          <include>Dockerfile</include>
+        </includes>
+        <filtering>true</filtering>
+        <targetPath>../</targetPath>
+      </resource>
+    </resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -120,7 +133,6 @@
 					<version>1.0.0</version>
 					<configuration>
 						<appEngineDirectory>${gcloud.sdk.path}</appEngineDirectory>
-						<dockerfile>src/main/appengine/Dockerfile</dockerfile>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -209,16 +221,21 @@
             <artifactId>docker-maven-plugin</artifactId>
             <version>0.4.9</version>
             <configuration>
-              <imageName>webtide/${project.artifactId}:${project.version}</imageName>
-              <baseImage>openjdk:8u102</baseImage>
+							<imageName>webtide/${project.artifactId}:${project.version}</imageName>
+              <baseImage>gcr.io/google_appengine/jetty9</baseImage>
+              <dockerDirectory>${project.build.directory}</dockerDirectory>
+							<!--
               <cmd>java -jar /${project.build.finalName}.jar</cmd>
+              -->
+              <!--
               <resources>
                 <resource>
-                  <targetPath>/</targetPath>
+                  <targetPath>$JETTY_BASE/webapps/root.war</targetPath>
                   <directory>${project.build.directory}</directory>
-                  <include>${project.build.finalName}.jar</include>
+                  <include>${project.build.finalName}.war</include>
                 </resource>
               </resources>
+              -->
             </configuration>
             <executions>
               <execution>
