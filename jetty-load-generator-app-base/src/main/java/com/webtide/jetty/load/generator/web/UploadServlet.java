@@ -5,17 +5,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  *
  */
+@WebServlet( "/upload" )
 public class UploadServlet
     extends HttpServlet
 {
@@ -35,13 +34,11 @@ public class UploadServlet
     protected void doPut( HttpServletRequest req, HttpServletResponse resp )
         throws ServletException, IOException
     {
-        Path tmp = Files.createTempFile( "loadgenerator", ".jetty" );
-        try (OutputStream outputStream = Files.newOutputStream( tmp ))
-        {
-            IOUtils.copy( req.getInputStream(), outputStream );
-        }
-
-        System.out.println( "file size:" + tmp.toFile().length() );
+        //Path tmp = Files.createTempFile( "loadgenerator", ".jetty" );
+        //try (OutputStream outputStream = Files.newOutputStream( tmp ))
+        //{
+        IOUtils.copy( req.getInputStream(), resp.getOutputStream() );
+        //}
 
     }
 }

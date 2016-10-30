@@ -6,4 +6,4 @@ RUN mv /usr/local/jetty-distribution-* $JETTY_HOME \
  && chown -R jetty:jetty $JETTY_HOME
 
 
-ADD jetty-load-app-gcloud-0.0.1-SNAPSHOT.war $JETTY_BASE/webapps/root.war
+ADD jetty-load-generator-app-gcloud-0.0.1-SNAPSHOT.war $JETTY_BASE/webapps/root.war

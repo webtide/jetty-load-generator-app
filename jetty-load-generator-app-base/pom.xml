@@ -10,7 +10,7 @@
 	</parent>
 
 	<groupId>com.webtide.jetty.load.generator</groupId>
-	<artifactId>jetty-load-app-base</artifactId>
+	<artifactId>jetty-load-generator-app-base</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Jetty :: Load App :: Base</name>
