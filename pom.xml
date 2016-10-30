@@ -6,7 +6,7 @@
 	<groupId>com.webtide.jetty.load.generator</groupId>
 	<artifactId>jetty-load-app</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 
 	<name>Jetty :: Load App</name>
 	<description>Jetty Load Test project with embeded Jetty</description>
@@ -22,45 +22,52 @@
 		<jetty-maven-plugin-version>9.3.7.v20160115</jetty-maven-plugin-version>
 	</properties>
 
-	<dependencies>
+	<modules>
+		<module>jetty-load-generator-app-base</module>
+		<module>jetty-load-generator-app-gcloud</module>
+		<module>jetty-load-generator-app-embedded</module>
+	</modules>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>local_tmp</id>
+			<url>file://${java.io.tmpdir}</url>
+		</snapshotRepository>
+	</distributionManagement>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.21</version>
-		</dependency>
+	<dependencyManagement>
+		<dependencies>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.5</version>
-		</dependency>
+			<dependency>
+				<groupId>com.webtide.jetty.load.generator</groupId>
+				<artifactId>jetty-load-app-base</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
-	</dependencies>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
 
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.21</version>
+			</dependency>
+
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.5</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/appengine</directory>
-        <includes>
-          <include>Dockerfile</include>
-        </includes>
-        <filtering>true</filtering>
-        <targetPath>../docker</targetPath>
-      </resource>
-    </resources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -76,90 +83,9 @@
 					<groupId>com.google.appengine</groupId>
 					<artifactId>gcloud-maven-plugin</artifactId>
 					<version>${gcloud-maven-plugin-version}</version>
-					<configuration>
-						<gcloud_app_prefix>beta</gcloud_app_prefix>
-						<gcloud_directory>${gcloud.sdk.path}</gcloud_directory>
-						<gcloud_project>jetty9-work</gcloud_project>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>com.google.cloud.tools</groupId>
-					<artifactId>appengine-maven-plugin</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<appEngineDirectory>${gcloud.sdk.path}</appEngineDirectory>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven-war-plugin-version}</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty-maven-plugin-version}</version>
-			</plugin>
-
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>jetty-distribution</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.eclipse.jetty</groupId>
-									<artifactId>jetty-distribution</artifactId>
-									<version>${jetty.version}</version>
-									<type>tar.gz</type>
-									<overWrite>true</overWrite>
-									<includes>**</includes>
-									<outputDirectory>${project.build.directory}/docker</outputDirectory>
-									<destFileName>jetty-distribution.tar.gz</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-					<execution>
-						<id>jetty-distribution-appengine-staging</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.eclipse.jetty</groupId>
-									<artifactId>jetty-distribution</artifactId>
-									<version>${jetty.version}</version>
-									<type>tar.gz</type>
-									<overWrite>true</overWrite>
-									<includes>**</includes>
-									<outputDirectory>${project.build.directory}/appengine-staging</outputDirectory>
-									<destFileName>jetty-distribution.tar.gz</destFileName>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
-					</execution>
-
-				</executions>
-			</plugin>
-
-		</plugins>
 	</build>
 
 	<repositories>
@@ -174,63 +100,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-
-  <profiles>
-    <profile>
-      <id>docker</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>3.0.1</version>
-						<executions>
-							<execution>
-								<id>copy-war</id>
-								<phase>package</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${project.build.directory}/docker</outputDirectory>
-									<resources>
-										<resource>
-											<directory>${project.build.directory}</directory>
-											<filtering>false</filtering>
-											<includes>
-												<include>*.war</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-          <plugin>
-            <groupId>com.spotify</groupId>
-            <artifactId>docker-maven-plugin</artifactId>
-            <version>0.4.9</version>
-            <configuration>
-							<imageName>webtide/${project.artifactId}:${project.version}</imageName>
-              <baseImage>gcr.io/google_appengine/jetty9</baseImage>
-              <dockerDirectory>${project.build.directory}/docker</dockerDirectory>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-  </profiles>
-
 
 </project>

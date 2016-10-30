@@ -1,12 +1,10 @@
 package com.webtide.jetty.load.generator.web;
 
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +16,8 @@ import java.nio.file.Path;
 /**
  *
  */
-@WebServlet("/upload")
-public class UploadServlet extends HttpServlet
+public class UploadServlet
+    extends HttpServlet
 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger( UploadServlet.class );
@@ -37,8 +35,8 @@ public class UploadServlet extends HttpServlet
     protected void doPut( HttpServletRequest req, HttpServletResponse resp )
         throws ServletException, IOException
     {
-        Path tmp = Files.createTempFile( "loadgenerator", ".jetty");
-        try(OutputStream outputStream = Files.newOutputStream( tmp ))
+        Path tmp = Files.createTempFile( "loadgenerator", ".jetty" );
+        try (OutputStream outputStream = Files.newOutputStream( tmp ))
         {
             IOUtils.copy( req.getInputStream(), outputStream );
         }
