@@ -19,6 +19,11 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.webtide.jetty.load.generator</groupId>
+			<artifactId>jetty-load-generator-app-base</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
