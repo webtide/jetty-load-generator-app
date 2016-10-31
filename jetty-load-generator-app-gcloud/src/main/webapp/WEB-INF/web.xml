@@ -9,6 +9,10 @@
   <servlet>
     <servlet-name>StatsServlet</servlet-name>
     <servlet-class>org.eclipse.jetty.servlet.StatisticsServlet</servlet-class>
+    <init-param>
+      <param-name>restrictToLocalhost</param-name>
+      <param-value>false</param-value>
+    </init-param>
   </servlet>
 
   <servlet-mapping>
