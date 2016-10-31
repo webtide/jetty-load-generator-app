@@ -14,6 +14,6 @@ return new ResourceProfile(new Resource( "index.html",
                                          new Resource( "/hello" ),
                                          new Resource( "/hello?name=foo" ),
                                          new Resource( "/hello?name=foo" ),
-                                         new Resource( "/upload" ).size(8192),
+                                         new Resource( "/upload" ).method("PUT").size(8192),
                                          )
 );
