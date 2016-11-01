@@ -12,7 +12,7 @@ Application deployed to [https://load-generator-app-dot-jetty9-work.appspot.com]
 
 Embeded app for Jetty Load Testing in branch embedded-app
 
-Build: `mvn clean package -DskipTests -Djetty.version=9.3.13.M0`
+Build: `mvn clean package -pl :jetty-load-generator-app-embedded -am -DskipTests -Djetty.version=9.3.13.M0`
 
 -Djetty.version= the version version you want to include in the uber jar
 
