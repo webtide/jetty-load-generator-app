@@ -1,115 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>com.webtide.jetty.load.generator</groupId>
-		<artifactId>jetty-load-app</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>com.webtide.jetty.load.generator</groupId>
+    <artifactId>jetty-load-app</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
-	<groupId>com.webtide.jetty.load.generator</groupId>
-	<artifactId>jetty-load-generator-app-embedded</artifactId>
-	<packaging>jar</packaging>
+  <groupId>com.webtide.jetty.load.generator</groupId>
+  <artifactId>jetty-load-generator-app-embedded</artifactId>
+  <packaging>jar</packaging>
 
-	<name>Jetty :: Load App :: Embedded</name>
-	<description>Jetty Load Test project with embedded Jetty</description>
+  <name>Jetty :: Load App :: Embedded</name>
+  <description>Jetty Load Test project with embedded Jetty</description>
 
-	<dependencies>
+  <dependencies>
 
-		<dependency>
-			<groupId>com.webtide.jetty.load.generator</groupId>
-			<artifactId>jetty-load-generator-app-base</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>com.webtide.jetty.load.generator</groupId>
+      <artifactId>jetty-load-generator-app-base</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-webapp</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-annotations</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlet</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-webapp</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-annotations</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-servlet</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty.http2</groupId>
-			<artifactId>http2-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.http2</groupId>
+      <artifactId>http2-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-alpn-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-alpn-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.eclipse.jetty.fcgi</groupId>
-			<artifactId>fcgi-server</artifactId>
-			<version>${jetty.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.fcgi</groupId>
+      <artifactId>fcgi-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.48</version>
-		</dependency>
+    <dependency>
+      <groupId>com.beust</groupId>
+      <artifactId>jcommander</artifactId>
+      <version>1.48</version>
+    </dependency>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
 
-	</dependencies>
+  </dependencies>
 
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>com.webtide.jetty.load.generator.Application</mainClass>
-								</transformer>
-							</transformers>
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/*.SF</exclude>
-										<exclude>META-INF/*.DSA</exclude>
-										<exclude>META-INF/*.RSA</exclude>
-									</excludes>
-								</filter>
-							</filters>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>com.webtide.jetty.load.generator.Application</mainClass>
+                </transformer>
+              </transformers>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
   <profiles>
     <profile>
       <id>docker</id>
