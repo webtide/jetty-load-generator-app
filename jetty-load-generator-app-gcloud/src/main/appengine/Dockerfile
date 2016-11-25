@@ -7,4 +7,6 @@ RUN mv /usr/local/jetty-distribution-* $JETTY_HOME \
 
 ADD jetty-load-generator-app-gcloud-0.0.1-SNAPSHOT.war $JETTY_BASE/webapps/root.war
 
+RUN java  -Djetty.base=/var/lib/jetty -jar /usr/local/jetty/start.jar --add-to-start=stats,servlet
+
 CMD ["java", "-XX:+PrintGCDetails", "-XX:+PrintGCTimeStamps","-Djetty.base=/var/lib/jetty","-jar","/usr/local/jetty/start.jar","--module=stats,servlet"]
