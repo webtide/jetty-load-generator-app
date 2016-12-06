@@ -35,7 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -82,7 +81,7 @@ public class MonitorServlet
 
         if ( Boolean.valueOf( req.getParameter( "start" ) ) )
         {
-            start = platformMonitor.start();
+            start = new PlatformMonitor().start();
             return;
         }
 
