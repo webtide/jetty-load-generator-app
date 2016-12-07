@@ -81,7 +81,7 @@ public class MonitorServlet
 
         if ( Boolean.valueOf( req.getParameter( "start" ) ) )
         {
-            start = new PlatformMonitor().start();
+            start = platformMonitor.start();
             return;
         }
 
