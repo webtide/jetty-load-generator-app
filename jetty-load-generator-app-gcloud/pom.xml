@@ -46,19 +46,6 @@
 
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/appengine</directory>
-        <includes>
-          <include>Dockerfile</include>
-        </includes>
-        <filtering>true</filtering>
-        <targetPath>../docker</targetPath>
-      </resource>
-    </resources>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -73,6 +60,36 @@
       </plugins>
     </pluginManagement>
     <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-war</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/docker</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                </resource>
+                <resource>
+                  <directory>src/main/appengine</directory>
+                  <includes>
+                    <include>Dockerfile</include>
+                  </includes>
+                  <filtering>true</filtering>
+                  <targetPath>../docker</targetPath>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
 
       <plugin>
