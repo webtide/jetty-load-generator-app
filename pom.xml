@@ -24,6 +24,7 @@
 
 	<modules>
 		<module>jetty-load-generator-app-base</module>
+		<module>jetty-load-generator-app-base-webapp</module>
 		<module>jetty-load-generator-app-gcloud</module>
 		<module>jetty-load-generator-app-embedded</module>
 	</modules>
@@ -42,6 +43,13 @@
 				<groupId>com.webtide.jetty.load.generator</groupId>
 				<artifactId>jetty-load-generator-app-base</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.webtide.jetty.load.generator</groupId>
+				<artifactId>jetty-load-generator-app-base-webapp</artifactId>
+				<version>${project.version}</version>
+				<type>war</type>
 			</dependency>
 
 			<dependency>
@@ -89,6 +97,11 @@
 					<groupId>com.google.appengine</groupId>
 					<artifactId>gcloud-maven-plugin</artifactId>
 					<version>${gcloud-maven-plugin-version}</version>
+				</plugin>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>0.4.13</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

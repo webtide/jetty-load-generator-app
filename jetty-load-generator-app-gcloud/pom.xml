@@ -11,7 +11,7 @@
 
   <groupId>com.webtide.jetty.load.generator</groupId>
   <artifactId>jetty-load-generator-app-gcloud</artifactId>
-  <packaging>war</packaging>
+  <packaging>pom</packaging>
 
   <name>Jetty :: Load App :: Gcloud</name>
   <description>Jetty Load Test project GCloud package</description>
@@ -24,9 +24,22 @@
     </dependency>
 
     <dependency>
+      <groupId>com.webtide.jetty.load.generator</groupId>
+      <artifactId>jetty-load-generator-app-base-webapp</artifactId>
+      <type>war</type>
+    </dependency>
+
+    <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-servlet</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-distribution</artifactId>
+      <version>${jetty.version}</version>
+      <type>tar.gz</type>
     </dependency>
 
   </dependencies>
@@ -60,24 +73,54 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>${maven-war-plugin-version}</version>
-        <configuration>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>${jetty-maven-plugin-version}</version>
-      </plugin>
+
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
+          <execution>
+            <id>base-webapp</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.webtide.jetty.load.generator</groupId>
+                  <artifactId>jetty-load-generator-app-base-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <overWrite>true</overWrite>
+                  <includes>**</includes>
+                  <outputDirectory>${project.build.directory}/docker</outputDirectory>
+                  <destFileName>jetty-load-generator-app-base-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>base-webapp-appengine-staging</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>com.webtide.jetty.load.generator</groupId>
+                  <artifactId>jetty-load-generator-app-base-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <overWrite>true</overWrite>
+                  <includes>**</includes>
+                  <outputDirectory>${project.build.directory}/appengine-staging</outputDirectory>
+                  <destFileName>jetty-load-generator-app-base-webapp.war</destFileName>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
           <execution>
             <id>jetty-distribution</id>
             <phase>prepare-package</phase>
@@ -166,35 +209,8 @@
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-              <execution>
-                <id>copy-war</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${project.build.directory}/docker</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${project.build.directory}</directory>
-                      <filtering>false</filtering>
-                      <includes>
-                        <include>*.war</include>
-                      </includes>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
             <groupId>com.spotify</groupId>
             <artifactId>docker-maven-plugin</artifactId>
-            <version>0.4.9</version>
             <configuration>
               <imageName>webtide/${project.artifactId}:${project.version}</imageName>
               <baseImage>gcr.io/google_appengine/jetty9</baseImage>
