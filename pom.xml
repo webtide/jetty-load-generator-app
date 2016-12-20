@@ -26,6 +26,7 @@
 		<module>jetty-load-generator-app-base</module>
 		<module>jetty-load-generator-app-base-webapp</module>
 		<module>jetty-load-generator-app-gcloud</module>
+		<module>jetty-load-generator-app-appengine</module>
 		<module>jetty-load-generator-app-embedded</module>
 	</modules>
 
