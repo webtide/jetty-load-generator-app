@@ -12,6 +12,8 @@ return new ResourceProfile(new Resource( "index.html",
                                                        new Resource( "/js/bootstrap.js" )
                                          ),
                                          new Resource( "/hello" ),
+                                         new Resource( "/dump.jsp?wine=foo&foo=bar" ),
+                                         new Resource( "/not_here.html" ),
                                          new Resource( "/hello?name=foo" ),
                                          new Resource( "/hello?name=foo" ),
                                          new Resource( "/upload" ).method("PUT").size(8192),
