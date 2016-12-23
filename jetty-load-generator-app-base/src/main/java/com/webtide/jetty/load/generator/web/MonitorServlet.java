@@ -114,33 +114,39 @@ public class MonitorServlet
         //start.
         //stop.
 
+        try
+        {
+            Map<String, Object> run = new LinkedHashMap<>();
+            Map<String, Object> config = new LinkedHashMap<>();
+            run.put( "config", config );
+            config.put( "cores", start.cores );
+            config.put( "totalMemory", new Result( start.gibiBytes( start.totalMemory ), "GiB" ) );
+            config.put( "os", start.os );
+            config.put( "jvm", start.jvm );
+            config.put( "totalHeap", new Result( start.gibiBytes( start.heap.getMax() ), "GiB" ) );
+            config.put( "date", new Date( start.date ).toString() );
+            Map<String, Object> results = new LinkedHashMap<>();
+            run.put( "results", results );
+            results.put( "cpu", new Result( stop.percent( stop.cpuTime, stop.time ) / start.cores, "%" ) );
+            results.put( "jitTime", new Result( stop.jitTime, "ms" ) );
+            Map<String, Object> gc = new LinkedHashMap<>();
+            results.put( "gc", gc );
+            gc.put( "youngCount", stop.youngCount );
+            gc.put( "youngTime", new Result( stop.youngTime, "ms" ) );
+            gc.put( "oldCount", stop.oldCount );
+            gc.put( "oldTime", new Result( stop.oldTime, "ms" ) );
+            gc.put( "youngGarbage", new Result( stop.mebiBytes( stop.edenBytes + stop.survivorBytes ), "MiB" ) );
+            gc.put( "oldGarbage", new Result( stop.mebiBytes( stop.tenuredBytes ), "MiB" ) );
 
-        Map<String, Object> run = new LinkedHashMap<>();
-        Map<String, Object> config = new LinkedHashMap<>();
-        run.put("config", config);
-        config.put("cores", start.cores);
-        config.put("totalMemory", new Result(start.gibiBytes(start.totalMemory), "GiB"));
-        config.put("os", start.os);
-        config.put("jvm", start.jvm);
-        config.put("totalHeap", new Result(start.gibiBytes(start.heap.getMax()), "GiB"));
-        config.put("date", new Date( start.date).toString());
-        Map<String, Object> results = new LinkedHashMap<>();
-        run.put("results", results);
-        results.put("cpu", new Result(stop.percent(stop.cpuTime, stop.time) / start.cores, "%"));
-        results.put("jitTime", new Result(stop.jitTime, "ms"));
-        Map<String, Object> gc = new LinkedHashMap<>();
-        results.put("gc", gc);
-        gc.put("youngCount", stop.youngCount);
-        gc.put("youngTime", new Result(stop.youngTime, "ms"));
-        gc.put("oldCount", stop.oldCount);
-        gc.put("oldTime", new Result(stop.oldTime, "ms"));
-        gc.put("youngGarbage", new Result(stop.mebiBytes(stop.edenBytes + stop.survivorBytes), "MiB"));
-        gc.put("oldGarbage", new Result(stop.mebiBytes(stop.tenuredBytes), "MiB"));
-
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable( SerializationFeature.INDENT_OUTPUT );
-        mapper.writeValue( response.getOutputStream(), run );
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.enable( SerializationFeature.INDENT_OUTPUT );
+            mapper.writeValue( response.getOutputStream(), run );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace( response.getWriter() );
+            throw new IOException( e.getMessage(), e );
+        }
 
     }
 
