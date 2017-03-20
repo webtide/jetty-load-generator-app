@@ -1,4 +1,4 @@
-import org.eclipse.jetty.load.generator.profile.*
+import org.eclipse.jetty.load.generator.*
 
 node('master') {
 
@@ -31,7 +31,7 @@ node('master') {
     }, secondBranch: {
       //def port = readFile 'jetty.local.port'
       sleep 5
-      def profile = new ResourceProfile(new Resource( "/jenkins",
+      def profile = new Resource( "/jenkins",
                                                       new Resource( "/jenkins/job/pipeline-test/",
                                                                     new Resource( "/logo.gif" ),
                                                                     new Resource( "/spacer.png" )
@@ -45,10 +45,9 @@ node('master') {
                                                       new Resource( "/iframeContents.html" ),
                                                       new Resource( "/moreIframeContents.html" ),
                                                       new Resource( "/favicon.ico" )
-      )
       );
 
-      def transport = org.eclipse.jetty.load.generator.LoadGenerator.Transport.HTTP;
+      def transport = org.mortbay.jetty.load.generator.starter.LoadGeneratorStarterArgs.Transport.HTTP;
 
       def timeUnit = java.util.concurrent.TimeUnit.SECONDS;
 
