@@ -1,3 +1,5 @@
+import org.mortbay.jetty.load.generator.Resource
+
 new Resource( "index.html",
                                          new Resource( "/css/bootstrap.css",
                                                        new Resource( "/css/bootstrap-theme.css" ),
