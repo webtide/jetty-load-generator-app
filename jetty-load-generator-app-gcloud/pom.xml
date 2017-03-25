@@ -66,7 +66,7 @@
         <artifactId>maven-resources-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-war</id>
+            <id>copy-resources</id>
             <phase>package</phase>
             <goals>
               <goal>copy-resources</goal>
@@ -81,9 +81,12 @@
                   <directory>src/main/appengine</directory>
                   <includes>
                     <include>Dockerfile</include>
+                    <include>app.yaml</include>
                   </includes>
                   <filtering>true</filtering>
+                  <!--
                   <targetPath>../docker</targetPath>
+                  -->
                 </resource>
               </resources>
             </configuration>
@@ -118,27 +121,6 @@
             </configuration>
           </execution>
           <execution>
-            <id>base-webapp-appengine-staging</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>com.webtide.jetty.load.generator</groupId>
-                  <artifactId>jetty-load-generator-app-base-webapp</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <overWrite>true</overWrite>
-                  <includes>**</includes>
-                  <outputDirectory>${project.build.directory}/appengine-staging</outputDirectory>
-                  <destFileName>jetty-load-generator-app-base-webapp.war</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <execution>
             <id>jetty-distribution</id>
             <phase>prepare-package</phase>
             <goals>
@@ -159,28 +141,6 @@
               </artifactItems>
             </configuration>
           </execution>
-          <execution>
-            <id>jetty-distribution-appengine-staging</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.eclipse.jetty</groupId>
-                  <artifactId>jetty-distribution</artifactId>
-                  <version>${jetty.version}</version>
-                  <type>tar.gz</type>
-                  <overWrite>true</overWrite>
-                  <includes>**</includes>
-                  <outputDirectory>${project.build.directory}/appengine-staging</outputDirectory>
-                  <destFileName>jetty-distribution.tar.gz</destFileName>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-
         </executions>
       </plugin>
 
@@ -217,7 +177,7 @@
                   <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <workingDirectory>${project.build.directory}/</workingDirectory>
+                  <workingDirectory>${project.build.directory}/docker</workingDirectory>
                   <executable>gcloud</executable>
                   <!-- we accept 1 as the service may not exist already -->
                   <successCodes>
@@ -241,7 +201,7 @@
                   <goal>exec</goal>
                 </goals>
                 <configuration>
-                  <workingDirectory>${project.build.directory}/</workingDirectory>
+                  <workingDirectory>${project.build.directory}/docker</workingDirectory>
                   <executable>gcloud</executable>
                   <arguments>
                     <argument>--quiet</argument>
@@ -282,6 +242,5 @@
     </profile>
 
   </profiles>
-
 
 </project>

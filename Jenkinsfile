@@ -31,22 +31,27 @@ node('master') {
     }, secondBranch: {
       //def port = readFile 'jetty.local.port'
       sleep 5
-      def profile = new Resource( "/jenkins",
-                                                      new Resource( "/jenkins/job/pipeline-test/",
-                                                                    new Resource( "/logo.gif" ),
-                                                                    new Resource( "/spacer.png" )
-                                                      ),
-                                                      new Resource( "jenkins/job/foo/" ),
-                                                      new Resource( "/script.js",
-                                                                    new Resource( "/library.js" ),
-                                                                    new Resource( "/morestuff.js" )
-                                                      ),
-                                                      new Resource( "/anotherScript.js" ),
-                                                      new Resource( "/iframeContents.html" ),
-                                                      new Resource( "/moreIframeContents.html" ),
-                                                      new Resource( "/favicon.ico" )
-      );
+      def profile = new Resource( "index.html",
+                                  new Resource( "/css/bootstrap.css",
+                                                new Resource( "/css/bootstrap-theme.css" ),
+                                                new Resource( "/js/jquery-3.1.1.min.js"),
+                                                new Resource( "/js/jquery-3.1.1.min.js"),
+                                                new Resource( "/js/jquery-3.1.1.min.js"),
+                                                new Resource( "/js/jquery-3.1.1.min.js")
+                                  ),
+                                  new Resource( "/js/bootstrap.js" ,
+                                                new Resource( "/js/bootstrap.js" ),
+                                                new Resource( "/js/bootstrap.js" ),
+                                                new Resource( "/js/bootstrap.js" )
+                                  ),
+                                  new Resource( "/hello" ),
+                                  new Resource( "/dump.jsp?wine=foo&foo=bar" ),
+                                  new Resource( "/not_here.html" ),
+                                  new Resource( "/hello?name=foo" ),
+                                  new Resource( "/hello?name=foo" ),
+                                  new Resource( "/upload" ).method("PUT").requestLength(8192),
 
+                                  );
       def transport = org.mortbay.jetty.load.generator.starter.LoadGeneratorStarterArgs.Transport.HTTP;
 
       def timeUnit = java.util.concurrent.TimeUnit.SECONDS;
