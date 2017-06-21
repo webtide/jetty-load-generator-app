@@ -1,4 +1,5 @@
-FROM gcr.io/google_appengine/jetty9
+# FROM gcr.io/google_appengine/jetty9
+FROM gcr.io/google-appengine/openjdk:8-2017-03-14_17_45
 
 RUN rm -r /usr/local/jetty
 ADD jetty-distribution.tar.gz /usr/local/

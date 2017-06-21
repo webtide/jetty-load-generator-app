@@ -225,7 +225,9 @@
             <artifactId>docker-maven-plugin</artifactId>
             <configuration>
               <imageName>webtide/${project.artifactId}:${project.version}</imageName>
+              <!--
               <baseImage>gcr.io/google_appengine/jetty9</baseImage>
+              -->
               <dockerDirectory>${project.build.directory}/docker</dockerDirectory>
             </configuration>
             <executions>
